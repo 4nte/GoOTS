@@ -14,11 +14,17 @@ func LoadKnownPackets() map[uint8]TibiaPacket {
 	// logout packet
 	knownPackets[0x14] = GameLogoutPacket{}
 
-	// move packets
+	// walk packets
 	knownPackets[0x65] = PlayerWalkPacket{Direction: game.North}
 	knownPackets[0x66] = PlayerWalkPacket{Direction: game.East}
 	knownPackets[0x67] = PlayerWalkPacket{Direction: game.South}
-	knownPackets[0x69] = PlayerWalkPacket{Direction: game.West}
+	knownPackets[0x68] = PlayerWalkPacket{Direction: game.West}
+
+	// diagonal walk packets
+	knownPackets[0x6A] = PlayerWalkPacket{Direction: game.NorthEast}
+	knownPackets[0x6B] = PlayerWalkPacket{Direction: game.SouthEast}
+	knownPackets[0x6C] = PlayerWalkPacket{Direction: game.SouthWest}
+	knownPackets[0x6D] = PlayerWalkPacket{Direction: game.NorthWest}
 
 	// turn packets
 	knownPackets[0x6f] = PlayerTurnPacket{Direction: game.North}

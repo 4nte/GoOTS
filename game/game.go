@@ -10,6 +10,10 @@ const (
 	East
 	South
 	West
+	NorthEast
+	SouthEast
+	SouthWest
+	NorthWest
 )
 
 // Position is the real in-game position

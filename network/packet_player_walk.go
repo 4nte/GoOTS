@@ -36,6 +36,35 @@ func (packet PlayerWalkPacket) Parse(msg *Message, code uint8, tc *TibiaConnecti
 		width = 1
 		height = 14
 		to.X--
+
+		// case game.NorthEast:
+		// offset.X =
+		// offset.Y =
+		// width =
+		// height =
+		// to.Y--
+		// to.X++
+		// case game.SouthEast:
+		// 	to.Y++
+		// 	to.X++
+		// 	offset.X =
+		// 	offset.
+		// 	width =
+		// 	height =
+		// case game.SouthWest:
+		// 	to.Y++
+		// 	to.X--
+		// 	offset.X =
+		// 	offset.Y
+		// 	width =
+		// 	height =
+		// case game.NorthWest:
+		// 	to.Y--
+		// 	to.X--
+		// 	offset.X =
+		// 	offset.Y =
+		// 	width =
+		// 	height =
 	}
 
 	if !tc.Map.MoveCreature(tc.Player, to, packet.Direction) {
