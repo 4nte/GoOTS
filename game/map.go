@@ -117,12 +117,15 @@ func (m *Map) LoadSector(filename string) {
 func (m *Map) MoveCreature(c *Creature, pos Position, direction uint8) bool {
 	from := m.GetTile(c.Position)
 	to := m.GetTile(pos)
+
 	if from == nil || to == nil {
 		return false
 	}
+
 	if !from.RemoveCreature(c) {
 		return false
 	}
+
 	to.AddCreature(c)
 	c.Position = pos
 	c.Direction = direction

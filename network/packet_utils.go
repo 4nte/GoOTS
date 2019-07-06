@@ -2,43 +2,16 @@ package network
 
 import (
 	"fmt"
+	"net"
 
 	"github.com/rwxsu/goot/game"
 )
 
-func ParseCommand(tc *TibiaConnection, msg *Message, code uint8) {
-	switch code {
-	case 0x65:
-		SendMoveCreature(tc, game.North, code)
-	case 0x66:
-		SendMoveCreature(tc, game.East, code)
-	case 0x67:
-		SendMoveCreature(tc, game.South, code)
-	case 0x68:
-		SendMoveCreature(tc, game.West, code)
-	case 0x6f:
-		SendTurnCreature(tc, game.North)
-	case 0x70:
-		SendTurnCreature(tc, game.East)
-	case 0x71:
-		SendTurnCreature(tc, game.South)
-	case 0x72:
-		SendTurnCreature(tc, game.West)
-	case 0xa0:
-		tc.Player.Tactic.FightMode = msg.ReadUint8()
-		tc.Player.Tactic.ChaseOpponent = msg.ReadUint8()
-		tc.Player.Tactic.AttackPlayers = msg.ReadUint8()
-	default:
-		SendSnapback(tc)
-	}
-}
-
-func SendSnapback(tc *TibiaConnection) {
+func SendInvalidClientVersion(c net.Conn) {
 	msg := NewMessage()
-	msg.WriteUint8(0xb5)
-	msg.WriteUint8(tc.Player.Direction)
-	SendMessage(tc.Connection, msg)
-	SendCancelMessage(tc, "Sorry, not possible.")
+	msg.WriteUint8(0x0a)
+	msg.WriteString("Only protocol 7.40 allowed!")
+	SendMessage(c, msg)
 }
 
 func SendCancelMessage(tc *TibiaConnection, str string) {
@@ -47,60 +20,12 @@ func SendCancelMessage(tc *TibiaConnection, str string) {
 	SendMessage(tc.Connection, msg)
 }
 
-func SendMoveCreature(tc *TibiaConnection, direction, code uint8) {
-	var offset game.Offset
-	var width, height uint16
-	from := tc.Player.Position
-	to := tc.Player.Position
-	switch direction {
-	case game.North:
-		offset.X = -8
-		offset.Y = -6
-		width = 18
-		height = 1
-		to.Y--
-	case game.South:
-		offset.X = -8
-		offset.Y = 7
-		width = 18
-		height = 1
-		to.Y++
-	case game.East:
-		offset.X = 9
-		offset.Y = -6
-		width = 1
-		height = 14
-		to.X++
-	case game.West:
-		offset.X = -8
-		offset.Y = -6
-		width = 1
-		height = 14
-		to.X--
-	}
-	if !tc.Map.MoveCreature(tc.Player, to, direction) {
-		SendSnapback(tc)
-	}
+func SendSnapback(tc *TibiaConnection) {
 	msg := NewMessage()
-	msg.WriteUint8(0x6d)
-	AddPosition(msg, from)
-	msg.WriteUint8(0x01) // oldStackPos
-	AddPosition(msg, to)
-	msg.WriteUint8(code)
-	AddMapArea(msg, tc.Map, to, offset, width, height)
-	SendMessage(tc.Connection, msg)
-}
-
-func SendTurnCreature(tc *TibiaConnection, direction uint8) {
-	tc.Player.Direction = direction
-	msg := NewMessage()
-	msg.WriteUint8(0x6b)
-	AddPosition(msg, tc.Player.Position)
-	msg.WriteUint8(1)
-	msg.WriteUint16(0x63)
-	msg.WriteUint32(tc.Player.ID)
+	msg.WriteUint8(0xb5)
 	msg.WriteUint8(tc.Player.Direction)
 	SendMessage(tc.Connection, msg)
+	SendCancelMessage(tc, "Sorry, not possible.")
 }
 
 func SendAddCreature(tc *TibiaConnection) {
@@ -312,4 +237,41 @@ func AddPlayerMessage(msg *Message, str string, kind uint8) {
 	msg.WriteUint8(0xb4)
 	msg.WriteUint8(kind)
 	msg.WriteString(str)
+}
+
+// Placeholder player
+func GetDumpPlayer() game.Creature {
+	return game.Creature{
+		ID:        0x04030201,
+		Access:    game.Tutor,
+		Name:      "rwxsu",
+		Cap:       50,
+		Combat:    game.Skill{Level: 8, Percent: 0, Experience: 4200},
+		HealthNow: 100,
+		HealthMax: 200,
+		ManaNow:   50,
+		ManaMax:   100,
+		Magic:     game.Skill{Level: 10, Percent: 50},
+		Fist:      game.Skill{Level: 10, Percent: 50},
+		Club:      game.Skill{Level: 10, Percent: 50},
+		Sword:     game.Skill{Level: 10, Percent: 50},
+		Axe:       game.Skill{Level: 10, Percent: 50},
+		Distance:  game.Skill{Level: 10, Percent: 50},
+		Shielding: game.Skill{Level: 10, Percent: 50},
+		Fishing:   game.Skill{Level: 10, Percent: 50},
+		Direction: game.South,
+		Position:  game.Position{X: 32000, Y: 32000, Z: 7},
+		Outfit: game.Outfit{
+			Type: 0x80,
+			Head: 0x50,
+			Body: 0x50,
+			Legs: 0x50,
+			Feet: 0x50,
+		},
+		Skull: 3,
+		Icons: 1,
+		Light: game.Light{Level: 0x7, Color: 0xd7},
+		World: game.World{Light: game.Light{Level: 0x00, Color: 0xd7}},
+		Speed: 60000,
+	}
 }
