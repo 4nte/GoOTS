@@ -5,8 +5,8 @@ import (
 	"net"
 	"path/filepath"
 
-	"github.com/rwxsu/goot/game"
-	"github.com/rwxsu/goot/network"
+	"gitlab.com/wick3dr0se/goots/game"
+	"gitlab.com/wick3dr0se/goots/network"
 )
 
 var connectionManager network.ConnectionManager

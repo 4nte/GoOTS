@@ -4,7 +4,7 @@ import (
 	"net"
 	"sync"
 
-	"github.com/rwxsu/goot/game"
+	"gitlab.com/wick3dr0se/goots/game"
 )
 
 // ConnectionManager is used to manage TibiaConnections

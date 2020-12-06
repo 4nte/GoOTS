@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/rwxsu/goot/parser"
+	"gitlab.com/wick3dr0se/goots/parser"
 )
 
 // SectorPosition contains the position equal to the .sec filename

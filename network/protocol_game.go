@@ -3,7 +3,7 @@ package network
 import (
 	"fmt"
 
-	"github.com/rwxsu/goot/game"
+	"gitlab.com/wick3dr0se/goots/game"
 )
 
 func ParseCommand(tc *TibiaConnection, msg *Message, code uint8) {
